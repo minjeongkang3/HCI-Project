@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="dataVis"></div>
+
+
+<script>
+d3.csv("data/stackBarData.csv", function(data) {
+  var x = d3.scaleBand()
+    .domain(data.columns)
+    .range([0, 160])
+    .padding(0.1);
+
+  var y = d3.scaleLinear()
+    .domain([0, data.length])
+    .range([0, 160]);
+
+  var z = d3.scaleOrdinal(d3.schemeCategory10);
+
+  var chart = d3.select('#dataVis')
+        .append('svg')
+          // .attr('width', '400')
+        .append('g')
+          .attr("transform", "translate(20, 20)")
+
+  for (var column of data.columns) {
+    // histogram of values in each row
+    var histo = data.map(row => row[column])
+        .reduce((histo, value) => {
+            if (histo[value]) {
+                histo[value]++;
+            } else {
+              histo[value] = 1;
+            }
+            return histo;
+        }, {});
+
+    var keys = Object.keys(histo);
+    //produce a one-column stack
+    var stack = d3.stack()
+      .keys(keys)([histo])
+      //unpack the column
+      .map((d, i) => {
+          return {key: keys[i], data: d[0]}
+      });
+  
+      chart.append('g')
+        .selectAll('rect')
+        .data(stack)
+        .enter().append('rect')
+        // position in the x-axis
+          .attr('x', x(column))
+          .attr('y', d => y(d.data[0]))
+          .attr("height", d => y(d.data[1]) - y(d.data[0]))
+          .attr("width", x.bandwidth())
+          .attr('fill', (d, i) => z(i))
+          .append('title')
+            .text(d => d.key + ': ' + (d.data[1] - d.data[0]));
+    
+    chart.append('g')
+        .attr("transform", "translate(0, 160)")
+        .call(d3.axisBottom(x));
+    
+    chart.append('g')
+        .attr("transform", "translate(160)")
+        .call(d3.axisRight(y).ticks(data.length));
+  }
+});
+
+</script>

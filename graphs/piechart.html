@@ -29,8 +29,8 @@
         .append("g")
         .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 100) + ")"); // Add 100 on Y translation
 
-    d3.csv("data/piechartData.cvs", function (data) {
-
+    d3.csv("./data/piechartData.cvs", function (data) {
+        console.log(data)
         // X scale
         var x = d3.scaleBand()
             .range([0, 2 * Math.PI])    // X axis  0 to 2pi = all around the circle.

@@ -6,6 +6,24 @@ import pieChartCsv from 'static/data/piechartData.csv';
 
 import 'assets/css/general.scss';
 
+const pie_chart_data = [
+    {
+        'System': "DB",
+        'Value': 100,
+    },
+    {
+        'System': "FS",
+        'Value': 60,
+    },
+    {
+        'System': "ApacheS",
+        'Value': 30,
+    },
+    {
+        'System': "SYS8",
+        'Value': 20,
+    }
+]
 
 export default class Home extends Component {
     constructor(props) {

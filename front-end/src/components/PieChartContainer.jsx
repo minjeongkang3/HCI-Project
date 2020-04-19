@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import { scaleRadial } from 'd3-scale';
+import 'assets/css/piechart.scss';
 
-const margin = { top: 10, right: 10, bottom: 10, left: 10 },
-width = 100 - margin.left - margin.right,
-height = 100 - margin.top - margin.bottom;
+const margin = { top: 0, right: 0, bottom: 0, left: 10 },
+width = 200 - margin.left - margin.right,
+height = 200 - margin.top - margin.bottom;
 
 const inner_radius = 40;
 const outer_radius = 100;
@@ -20,7 +21,7 @@ export default class PieChartContainer extends Component {
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
-            .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 100) + ")"); // Add 100 on Y translation
+            .attr("transform", "translate(" + width / 2  + "," + (height / 2 + 20) + ")"); // Add 100 on Y translation
         ;
 
         d3.csv(this.props.pie_chart_data).then(function(data) { 

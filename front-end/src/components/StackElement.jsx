@@ -7,8 +7,8 @@ export default class StackElement extends Component {
 
     render() {
         return(
-            <div className={`stack_element ${this.props.current > 0 ? 'current' + this.props.current : ""}`}>
-                <h4>{ this.props.data }</h4>
+            <div onClick={(e) => { this.props.onclick_handler(this.props.data) }}  className={`stack_element ${this.props.current > 0 ? 'current' + this.props.current : ""}`}>
+                <h4>{ this.props.data.name }</h4>
             </div>
         )
     }

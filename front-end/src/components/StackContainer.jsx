@@ -8,14 +8,19 @@ export default class StackContainer extends Component {
         const stack_visited_items = []
         for (const [index, value] of this.props.stack_data_visited.entries()) {
             stack_visited_items.push(
-                <StackElement key={index} data={ value } current={ 0 }/>
+                <StackElement key={index} data={ value } current={ 0 }
+                onclick_handler={ this.props.onclick_visited }
+                />
             )
         }
 
         const stack_current_items = []
         for (const [index, value] of this.props.stack_data_current.entries()) {
             stack_current_items.push(
-                <StackElement key={index} data={ value } current={ index + 1 }/>
+                <StackElement key={index} data={ value } 
+                    current={ index + 1 }
+                    onclick_handler={ this.props.onclick_current }
+                    />
             )
         }
 

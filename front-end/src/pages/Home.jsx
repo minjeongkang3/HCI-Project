@@ -2,26 +2,29 @@ import React, { Component } from 'react';
 import PieChartContainer from 'components/PieChartContainer';
 import StackContainer from 'components/StackContainer';
 import ViewContainer from 'components/ViewContainer';
-import pieChartCsv from 'static/data/piechartData.csv';
 
 import 'assets/css/general.scss';
 
-const pie_chart_data = [
+const init_pie_chart_data = [
     {
         name: "DB",
-        value: 100,
+        value: 50,
     },
     {
         name: "FS",
-        value: 60,
+        value: 50,
     },
     {
         name: "ApacheS",
-        value: 30,
+        value: 50,
     },
     {
         name: "SYS8",
-        value: 20,
+        value: 50,
+    },
+    {
+        name: "SYS1",
+        value: 50,
     }
 ]
 
@@ -29,19 +32,27 @@ export default class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pie_chart_data: pieChartCsv,
+            pie_chart_data: init_pie_chart_data,
             stack_data_visited: [],
             stack_data_current: []
         }  
         this.handle_click_visited = this.handle_click_visited.bind(this)
         this.handle_click_current = this.handle_click_current.bind(this)
         this.get_current_options = this.get_current_options.bind(this)
+        this.handle_click_piechart = this.handle_click_piechart.bind(this)
+        this.update_piechart = this.update_piechart.bind(this)
+        this.sort_by_value = this.sort_by_value.bind(this)
     }
 
+    sort_by_value(list) {
+        list.sort((a,b) => { return b.value - a.value})
+        return list
+    }
     componentDidMount() {
-        let data = pie_chart_data
-        data.sort((a,b) => { return b.value - a.value})
+        let data = init_pie_chart_data
+        data = this.sort_by_value(data)
         this.setState({
+            pie_chart_data: data,
             stack_data_current: data
         })
     }
@@ -65,6 +76,30 @@ export default class Home extends Component {
             stack_data_current: this.get_current_options(stack_data_visited)
         })
     }
+
+    handle_click_piechart(option){
+        let stack_data_visited = []
+        stack_data_visited.push({
+            name: option.name,
+            index: stack_data_visited.length
+        })
+        this.setState({
+            stack_data_visited: stack_data_visited,
+            stack_data_current: this.get_current_options(stack_data_visited)
+        })
+    }
+
+    update_piechart(from_datetime, to_date_times){
+        var pie_chart_data = this.state.pie_chart_data
+        for (let i =0; i < pie_chart_data.length; i++) {
+            pie_chart_data[i].value = Math.floor(Math.random() * 40 + 60)
+        }
+        pie_chart_data = this.sort_by_value(pie_chart_data)
+        this.setState({
+            pie_chart_data: pie_chart_data
+        })
+    }   
+
 
     get_current_options(visited_options) {
         let new_options = [
@@ -93,15 +128,16 @@ export default class Home extends Component {
             <div className='wrapper home_wrapper'>
                 <div className='row'>
                     <div className='col_flex side_col'>
-                        <PieChartContainer pie_chart_data={ this.state.pie_chart_data } />
+                        <PieChartContainer pie_chart_data={ this.state.pie_chart_data }
+                            onclick_piechart={ this.handle_click_piechart } />
                         <StackContainer stack_data_visited={ this.state.stack_data_visited } 
                             stack_data_current={ this.state.stack_data_current} 
-                            onclick_current={ this.handle_click_current}
-                            onclick_visited={ this.handle_click_visited}
+                            onclick_current={ this.handle_click_current }
+                            onclick_visited={ this.handle_click_visited }
                         />
                     </div>
                     <div className='col_flex main_col'>
-                        <ViewContainer />
+                        <ViewContainer update_piechart={this.update_piechart} />
                     </div>
                 </div>
             </div>

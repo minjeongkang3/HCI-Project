@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Slider from '@material-ui/core/Slider';
-import PieChart from './PieChart';
+import GraphWrapper from 'components/GraphWrapper';
 
 import 'assets/css/view.scss';
 
@@ -18,16 +18,16 @@ const TimeSlider = withStyles({
 export default class ViewContainer extends Component {
     constructor(props) {
         super(props);
-        
+        var init_max = 24
         this.state = {
             from_date: null,
             to_date: null,
-            time_range: [0, 24],
+            time_range: [0, init_max],
             slider_marks: [
                 { value: 0 },
-                { value: 24}
+                { value: init_max}
             ],
-            time_max: 24,
+            time_max: init_max,
         }
         this.handle_time = this.handle_time.bind(this);
         this.handle_date = this.handle_date.bind(this);
@@ -83,6 +83,7 @@ export default class ViewContainer extends Component {
             time_max: diff_hours,
             slider_marks: marks,
         }) 
+        this.props.update_piechart(from_date, to_date)
     }
 
     slider_val_format(value) {
@@ -144,8 +145,9 @@ export default class ViewContainer extends Component {
                             id='time_slider'
                         />
                     </div>
-                    <PieChart />
                 </div>
+
+                <GraphWrapper />
             </div>
         )
     }

@@ -8,6 +8,21 @@ $current-color3: #F9964F;
 $current-color3_2: #f0761f;
 $current-color4: #F5B658;
 $current-color4_2: #f0a22e;
+$current-color5: #58C67E;
+$current-color5_2: #45B26B;
+
+:export {
+    currentColor1: $current-color1;
+    currentColor1_2: $current-color1_2;
+    currentColor2: $current-color2;
+    currentColor2_2: $current-color2_2;
+    currentColor3: $current-color3;
+    currentColor3_2: $current-color3_2;
+    currentColor4: $current-color4;
+    currentColor4_2: $current-color4_2;
+    currentColor5: $current-color5;
+    currentolor5_2: $current-color5_2;
+  }
 
 .stack_container {
     display: flex;
@@ -88,3 +103,13 @@ $current-color4_2: #f0a22e;
     background:linear-gradient(to bottom, $current-color4_2 5%, $current-color4 100%);
     background-color: $current-color4_2;
 }
+
+.current5 {
+    background:linear-gradient(to bottom, $current-color5 5%, $current-color5_2 100%);
+    background-color: $current-color5;
+}
+.current5:hover {
+    background:linear-gradient(to bottom, $current-color5_2 5%, $current-color5 100%);
+    background-color: $current-color5_2;
+}
+

@@ -1,77 +1,82 @@
 import React, { Component } from 'react';
-import * as d3 from 'd3';
-import { scaleRadial } from 'd3-scale';
+import { Polar } from 'react-chartjs-2';
+import 'chartjs-plugin-labels';
 import 'assets/css/piechart.scss';
+import vars from 'assets/css/stack.scss';
 
-const margin = { top: 0, right: 0, bottom: 0, left: 10 },
-width = 200 - margin.left - margin.right,
-height = 200 - margin.top - margin.bottom;
-
-const inner_radius = 40;
-const outer_radius = 100;
+const colors = [vars.currentColor1, vars.currentColor2, vars.currentColor3, vars.currentColor4, vars.currentColor5] 
 
 export default class PieChartContainer extends Component {
     constructor(props) {
         super(props);
-        this.ref = React.createRef();
+
+        this.handle_click = this.handle_click.bind(this)
     }
 
-    componentDidMount() {
-        const svg = d3.select(this.ref.current)
-            .attr("width", width + margin.left + margin.right)
-            .attr("height", height + margin.top + margin.bottom)
-            .append("g")
-            .attr("transform", "translate(" + width / 2  + "," + (height / 2 + 20) + ")"); // Add 100 on Y translation
-        ;
-
-        d3.csv(this.props.pie_chart_data).then(function(data) { 
-            var x = d3.scaleBand()
-                .range([0, 2 * Math.PI])    // X axis  0 to 2pi = all around the circle.
-                .align(0)                  
-                .domain(data.map(function (d) { return d.System; })); 
-
-            var y = scaleRadial()
-                .range([inner_radius, outer_radius])   
-                .domain([0, 100]); // Domain of Y is from 0 to the max in the data
-
-            svg.append("g")
-                .selectAll("path")
-                .data(data)
-                .enter()
-                .append("path")
-                .attr("fill", "#69b3a2")
-                .attr("d", d3.arc()
-                    .innerRadius(inner_radius)
-                    .outerRadius(function (d) { return y(d['Value']); })
-                    .startAngle(function (d) { return x(d.System); })
-                    .endAngle(function (d) { return x(d.System) + x.bandwidth(); })
-                    .padAngle(0.01)
-                    .padRadius(inner_radius))
-            
-            // Add the labels
-            svg.append("g")
-                .selectAll("g")
-                .data(data)
-                .enter()
-                .append("g")
-                .attr("text-anchor", function (d) { return (x(d.System) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) < Math.PI ? "end" : "start"; })
-                .attr("transform", function (d) { return "rotate(" + ((x(d.System) + x.bandwidth() / 2) * 180 / Math.PI - 90) + ")" + "translate(" + (y(d['Value']) + 10) + ",0)"; })
-                .append("text")
-                .text(function (d) { return (d.System) })
-                .attr("transform", function (d) { return (x(d.System) + x.bandwidth() / 2 + Math.PI) % (2 * Math.PI) < Math.PI ? "rotate(180)" : "rotate(0)"; })
-                .style("font-size", "11px")
-                .attr("alignment-baseline", "middle")
-        })
-        .catch(function(err) {
-            throw err;
-        });
-       
+    handle_click(e, item) {
+        if (item.length > 0) {
+            this.props.onclick_piechart(this.props.pie_chart_data[item[0]._index])
+        }
     }
 
     render() {
+        const data = []
+        const labels = []
+        for (let i=0; i < this.props.pie_chart_data.length; i++){
+            data.push(this.props.pie_chart_data[i].value)
+            labels.push(this.props.pie_chart_data[i].name)
+        }
+        const pie_chart_data = {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors,
+                hoverBackgroundColor: [vars.currentColor1_2, vars.currentColor2_2, vars.currentColor3_2, vars.currentColor4_2, vars.currentColor5_2] 
+            }],
+
+        }
+        const pie_chart_options = {
+            plugins: {
+                labels: {
+                    render: 'label',
+                    fontColor: '#ffffff',
+                    fontSize: 14,
+                    fontStyle: 'bold',
+                    fontFamily: "Open Sans",
+                    position: 'inside',
+                    textMargin: 3,
+                }
+            },
+            legend: {
+                display: false
+             },
+            scale: {
+                display: false
+            },
+            tooltips: {
+                enabled: false
+            },
+            onClick: this.handle_click,
+            hover: {
+                onHover: function(e) {
+                   var point = this.getElementAtEvent(e);
+                   if (point.length) e.target.style.cursor = 'pointer';
+                   else e.target.style.cursor = 'default';
+                }
+            },
+
+            maintainAspectRatio: false
+            
+        }
         return(
             <div className='container_wrapper piechart_container'>
-                <svg ref={this.ref} />
+                <Polar
+                    id='pie_chart'
+                    width={80}
+                    height={80}
+                    data={ pie_chart_data }
+                    options={ pie_chart_options }
+                />
             </div>
         )
     }

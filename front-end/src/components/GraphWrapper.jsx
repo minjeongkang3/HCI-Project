@@ -5,7 +5,6 @@ export default class GraphWrapper extends Component {
         return(
             <div className='graph_wrapper'>
                 <div>
-                    hello
                 </div>
             </div>
         )

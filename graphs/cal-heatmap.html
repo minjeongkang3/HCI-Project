@@ -1,0 +1,80 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Heat Maps</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="text/javascript" src="//d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.min.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/cal-heatmap/3.3.10/cal-heatmap.css" />
+    <style>
+        #A{margin-top: 80px;
+        margin-left: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="A">Dataset A</div>
+
+    <p>
+        <button id="previous-selector" style="margin-bottom: 10px;">Backwards</button>
+        <button id="next-selector" style="margin-bottom: 10px;">Forwards</button>
+        <script type="text/javascript">
+            // convert
+            function converter(data) {
+                var i, total, results = {};
+                for (i = 0, total = data.length; i < total; i++) {
+                    results[+data[i].datetime] = +data[i].value;
+                }
+                return results;
+            }
+
+            var start_date = new Date();
+            // Set the date to 7 days ago
+            start_date.setDate(start_date.getDate() - 7);
+            // dataset == div id
+            var datasets = ["A"];
+            datasets.forEach(function (myObject) {
+                //https://cal-heatmap.com/
+                var cal = new CalHeatMap();
+                cal.init({
+                    itemSelector: "#" + myObject,
+                    itemNamespace: myObject,
+                    // append csv file
+                    data: myObject + "_data.csv",
+                    // cal-heatmap csv data parser
+                    dataType: "csv",
+                    // convert csv to {}
+                    afterLoadData: converter,
+                    // standard range that is shown on screen before shifting
+                    range: 7,
+                    // this can be changed to month
+                    domain: "day",
+                    //  hours left to right
+                    subDomain: "x_hour",
+                    // Each cell label
+                    subDomainTextFormat: "%H",
+                    //start: start_date,
+                    start: new Date(2020, 3, 18),
+                    // Set size of each hour
+                    cellSize: 25,
+                    // Set spacing between domains
+                    domainGutter: 10,
+                    domainMargin: 10,
+                    // Set animation speed
+                    animationDuration: 400,
+                    nextSelector: "#next-selector",
+                    previousSelector: "#previous-selector",
+                    tooltip: true,
+                    //labels tool tips
+                    itemName: ["item", "items"],
+                    displayLegend: true
+                });
+            });
+        </script>
+    </p>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+.icon_btn {
+    width: 30px;
+    height: 30px;
+}
+
+#prev_btn {
+    margin-right: 10px;
+}
+#next_btn {
+    margin-left: 10px;
+}
+.selector_btn {
+    margin-bottom: 20px;
+}
+.selector_btn:hover {
+    cursor: pointer;
+}
+
+.heatmap_wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#heatmap {
+    display: flex;
+    justify-content: center;
+}
+
+.line_graphs_wrapper {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}

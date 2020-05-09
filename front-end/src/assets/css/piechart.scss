@@ -1,8 +1,9 @@
 .piechart_container {
-    min-height: 250px;
+    max-height: 250px;
 }
 
 #pie_chart {
     padding: 20px;
+    max-height: 320px;
     box-sizing: border-box;
 }

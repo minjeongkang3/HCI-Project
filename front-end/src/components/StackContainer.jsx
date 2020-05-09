@@ -24,8 +24,15 @@ export default class StackContainer extends Component {
             )
         }
 
+        var empty_stack;
+        if (stack_current_items.length === 0 || stack_visited_items.length === 0) {
+            empty_stack = <h4 className='note'>Stack is empty</h4>;
+          } else {
+            empty_stack = null;
+          }
         return(
             <div className='container_wrapper stack_container'>
+                { empty_stack }
                 { stack_visited_items }
                 <div className='stack_space'></div>
                 { stack_current_items }

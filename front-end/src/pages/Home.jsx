@@ -34,7 +34,8 @@ export default class Home extends Component {
         this.state = {
             pie_chart_data: init_pie_chart_data,
             stack_data_visited: [],
-            stack_data_current: []
+            stack_data_current: [],
+            active: false,
         }  
         this.handle_click_visited = this.handle_click_visited.bind(this)
         this.handle_click_current = this.handle_click_current.bind(this)
@@ -42,51 +43,72 @@ export default class Home extends Component {
         this.handle_click_piechart = this.handle_click_piechart.bind(this)
         this.update_piechart = this.update_piechart.bind(this)
         this.sort_by_value = this.sort_by_value.bind(this)
+        this.set_active = this.set_active.bind(this)
+
+        this.view_ref = React.createRef();
     }
 
     sort_by_value(list) {
         list.sort((a,b) => { return b.value - a.value})
         return list
     }
+    
     componentDidMount() {
         let data = init_pie_chart_data
         data = this.sort_by_value(data)
         this.setState({
             pie_chart_data: data,
-            stack_data_current: data
+        })
+    }
+
+    set_active(active) {
+        this.setState({
+            active: active
         })
     }
 
     handle_click_visited(option){
-        let stack_data_visited = this.state.stack_data_visited.slice(0, option.index+1)
-        this.setState({
-            stack_data_visited: stack_data_visited,
-            stack_data_current: this.get_current_options(stack_data_visited)
-        })
+        if (this.state.active){
+            let stack_data_visited = this.state.stack_data_visited.slice(0, option.index+1)
+            this.setState({
+                stack_data_visited: stack_data_visited,
+                stack_data_current: this.get_current_options(stack_data_visited)
+            })
+            this.view_ref.current.restore_view(option.index)
+        }
     }
 
     handle_click_current(option){
-        let stack_data_visited = this.state.stack_data_visited
-        stack_data_visited.push({
-            name: option.name,
-            index: stack_data_visited.length
-        })
-        this.setState({
-            stack_data_visited: stack_data_visited,
-            stack_data_current: this.get_current_options(stack_data_visited)
-        })
+        if (this.state.active){
+            let stack_data_visited = this.state.stack_data_visited
+            stack_data_visited.push({
+                name: option.name,
+                index: stack_data_visited.length
+            })
+            this.setState({
+                stack_data_visited: stack_data_visited,
+                stack_data_current: this.get_current_options(stack_data_visited)
+            })
+            this.view_ref.current.store_view()
+            this.view_ref.current.update_heatmap_data()
+        }
     }
 
     handle_click_piechart(option){
-        let stack_data_visited = []
-        stack_data_visited.push({
-            name: option.name,
-            index: stack_data_visited.length
-        })
-        this.setState({
-            stack_data_visited: stack_data_visited,
-            stack_data_current: this.get_current_options(stack_data_visited)
-        })
+        if (this.state.active){
+            if (this.state.stack_data_visited.length > 0) {
+                this.view_ref.current.update_heatmap_data()
+            }
+            let stack_data_visited = []
+            stack_data_visited.push({
+                name: option.name,
+                index: stack_data_visited.length
+            })
+            this.setState({
+                stack_data_visited: stack_data_visited,
+                stack_data_current: this.get_current_options(stack_data_visited)
+            })
+        }
     }
 
     update_piechart(from_datetime, to_date_times){
@@ -137,7 +159,12 @@ export default class Home extends Component {
                         />
                     </div>
                     <div className='col_flex main_col'>
-                        <ViewContainer update_piechart={this.update_piechart} />
+                        <ViewContainer 
+                            update_piechart={ this.update_piechart } 
+                            set_active={ this.set_active }
+                            display={ this.state.stack_data_visited.length > 0}
+                            ref={this.view_ref}
+                        />
                     </div>
                 </div>
             </div>

@@ -40,12 +40,14 @@ export default class ViewContainer extends Component {
         this.format_date = this.format_date.bind(this)
     }
 
+    // on change handler for slider bar
     handle_time(event, new_range) {
         this.setState({
             time_range: new_range,
         })
     }
 
+    // updates heatmap with randomly generated data
     update_heatmap_data(event){
         this.setState({
             heatmap_data: this.get_heatmap_data(this.state.from_date, this.state.time_range)
@@ -59,6 +61,7 @@ export default class ViewContainer extends Component {
         return date.toISOString().slice(0,10)
     }
 
+    // on change handler for date input fields
     handle_date(date, type) {
         var from_date = this.state.from_date;
         var to_date = this.state.to_date
@@ -107,10 +110,12 @@ export default class ViewContainer extends Component {
         this.props.set_active(true)
     }
 
+    // tooltip format for sliding bar
     slider_val_format(value) {
         return value % 24 + ":00"
     }
 
+    // generates random data for heatmap 
     get_heatmap_data(from_data, time_range){
         var start_datetime = new Date(from_data);
         start_datetime.setHours(start_datetime.getHours() + time_range[0]);
@@ -131,12 +136,14 @@ export default class ViewContainer extends Component {
         return data 
     }
 
+    // updates heatmap with randomly generated data
     update_heatmap_data() {
         this.setState({
             heatmap_data: this.get_heatmap_data(this.state.from_date,this.state.time_range)
         })
     }
 
+    // stores configuration for visited view
     store_view(){
         var visited_views = this.state.visited_views
         visited_views.push(
@@ -147,7 +154,9 @@ export default class ViewContainer extends Component {
         })
     }
 
+    // restores the view with the stored cofiguration
     restore_view(index) {
+        console.log(this.state.visited_views)
         var view = this.state.visited_views[index]
         this.setState({
             from_date: view.from_date,
@@ -158,10 +167,12 @@ export default class ViewContainer extends Component {
         })
         this.setState({
             heatmap_data: view.heatmap_data,
-            visited_views: view.visited_views
+            visited_views: this.state.visited_views.slice(0, index)
         })
+        
     }
 
+    // random ts id generator
     generate_random_ids(num) {
         var ids = []
         for (let i=0; i < num; i++){

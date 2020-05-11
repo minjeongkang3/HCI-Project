@@ -25,6 +25,7 @@ export default class GraphWrapper extends Component {
         this.heatmap_on_click = this.heatmap_on_click.bind(this)
     }
 
+    // parser for heatmap data 
     parser(data) {
         var stats = {};
 	    for (var d in data) {
@@ -33,6 +34,7 @@ export default class GraphWrapper extends Component {
 	    return stats;
     }
 
+    // removes time from datetime
     to_date(datetime) {
         datetime.setHours(0)
         datetime.setMinutes(0);
@@ -42,9 +44,11 @@ export default class GraphWrapper extends Component {
     }
 
     componentWillReceiveProps(props) {
+        // update heatmap whenever receives new props
         this.update_heatmap_start(props.heatmap_data)
     }
     
+    // update the start date of the heatmap
     update_heatmap_start(heatmap_data) {
         if (heatmap_data.length > 0) {
             var start = new Date(heatmap_data[0].date * 1000)
@@ -81,6 +85,7 @@ export default class GraphWrapper extends Component {
         }
     }
 
+    // update heatmap with given data
     update_heatmap_data(heatmap_data) {
         if (heatmap_data.length > 0) {
             this.state.cal_heatmap.update(heatmap_data)  
@@ -93,6 +98,7 @@ export default class GraphWrapper extends Component {
         })
     }
     
+    // next arrow button for heatmap
     get_next() {
         if (this.state.heatmap_active) {
             var cur_end = new Date(this.state.start)
@@ -112,6 +118,7 @@ export default class GraphWrapper extends Component {
         }
     }
 
+    // previous arrow button for heatmap
     get_previous() {
         if (this.state.heatmap_active) {
             var start = new Date(this.props.heatmap_data[0].date * 1000)
@@ -133,6 +140,7 @@ export default class GraphWrapper extends Component {
         return new Promise(resolve => setTimeout(resolve, milliseconds))
     }
 
+    // on click handler for heatmap. renders line graphs
     heatmap_on_click(datetime, val) {
         if (this.state.heatmap_active) {
             var selected = this.props.heatmap_data.find(function(cell, index) {
@@ -151,6 +159,7 @@ export default class GraphWrapper extends Component {
     }
 
     componentDidMount() {
+        // instantiate the heatmap
         this.state.cal_heatmap.init({
             itemSelector: "#heatmap",
             range: 5,

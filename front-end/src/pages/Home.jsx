@@ -5,6 +5,7 @@ import ViewContainer from 'components/ViewContainer';
 
 import 'assets/css/general.scss';
 
+// dummy data for pie chart
 const init_pie_chart_data = [
     {
         name: "DB",
@@ -48,12 +49,14 @@ export default class Home extends Component {
         this.view_ref = React.createRef();
     }
 
+    // sorts a list of objects by 'value'
     sort_by_value(list) {
         list.sort((a,b) => { return b.value - a.value})
         return list
     }
     
     componentDidMount() {
+        // initialize pie chart
         let data = init_pie_chart_data
         data = this.sort_by_value(data)
         this.setState({
@@ -61,12 +64,14 @@ export default class Home extends Component {
         })
     }
 
+    // set 'active' based on whether date inputs are valid
     set_active(active) {
         this.setState({
             active: active
         })
     }
 
+    // click handler for visited stack items
     handle_click_visited(option){
         if (this.state.active){
             let stack_data_visited = this.state.stack_data_visited.slice(0, option.index+1)
@@ -78,6 +83,7 @@ export default class Home extends Component {
         }
     }
 
+    // click handler for current stack items
     handle_click_current(option){
         if (this.state.active){
             let stack_data_visited = this.state.stack_data_visited
@@ -94,6 +100,7 @@ export default class Home extends Component {
         }
     }
 
+    // click handler for pie chart segments
     handle_click_piechart(option){
         if (this.state.active){
             if (this.state.stack_data_visited.length > 0) {
@@ -111,6 +118,7 @@ export default class Home extends Component {
         }
     }
 
+    // updates pie chart with randomly generated data
     update_piechart(from_datetime, to_date_times){
         var pie_chart_data = this.state.pie_chart_data
         for (let i =0; i < pie_chart_data.length; i++) {
@@ -122,7 +130,8 @@ export default class Home extends Component {
         })
     }   
 
-
+    // gives current options based on the visited options
+    // for now, just returns dummy data
     get_current_options(visited_options) {
         let new_options = [
             {

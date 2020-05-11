@@ -13,6 +13,7 @@ export default class PieChartContainer extends Component {
         this.handle_click = this.handle_click.bind(this)
     }
 
+    // calls click handler in Home 
     handle_click(e, item) {
         if (item.length > 0) {
             this.props.onclick_piechart(this.props.pie_chart_data[item[0]._index])

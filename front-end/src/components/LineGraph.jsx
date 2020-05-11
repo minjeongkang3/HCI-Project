@@ -18,6 +18,7 @@ export default class LineGraph extends Component {
         this.generate_random_data = this.generate_random_data.bind(this)
     }
 
+    // random data generator
     generate_random_data(start_datetime) {
         var data = []
         for(let i=0; i<60; i++){
